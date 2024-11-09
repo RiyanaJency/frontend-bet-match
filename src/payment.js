@@ -22,7 +22,7 @@ function Payment() {
     const [message, setMessage] = useState('');
     const [qrCodeUrl, setQrCodeUrl] = useState('');
 
-    // Handle input changes
+    
     const handleChange = (e) => {
         const { name, value } = e.target;
 
@@ -60,6 +60,7 @@ function Payment() {
         }
     };
 
+    
     useEffect(() => {
         if (formData.country) {
             const selectedCountry = countryData.find(
@@ -69,6 +70,7 @@ function Payment() {
         }
     }, [formData.country]);
 
+    
     useEffect(() => {
         if (formData.state) {
             const selectedState = states.find(
@@ -78,7 +80,7 @@ function Payment() {
         }
     }, [formData.state, states]);
 
-    // Handle payment creation and QR code generation
+    
     const handlePayment = async (e) => {
         e.preventDefault();
         const isFormValid = Object.values(formData).every((field) => field !== '') && !mobileError;
@@ -88,16 +90,17 @@ function Payment() {
         }
 
         try {
-            // Destructure the necessary fields from formData
-            const { name, email, mobile: phone, country, state, city, amount } = formData;
-        
-            // Create payment
-            const response = await axios.post('http://127.0.0.1:8000/payments', { name, email, phone, country, state, city, amount }, {
-                headers: { 'Content-Type': 'application/json' },
-            });
+            
+            const { name, email, mobile, country, state, city, amount } = formData;
+
+            
+            const response = await axios.post('http://127.0.0.1:8000/payments', 
+                { name, email, mobile, country, state, city, amount }, 
+                { headers: { 'Content-Type': 'application/json' } }
+            );
 
             if (response.data.success) {
-                // Generate QR code if payment is successful
+                
                 const qrResponse = await axios.get(
                     `http://127.0.0.1:8000/payments/qr_code?amount=${formData.amount}`,
                     { responseType: 'blob' }
@@ -252,7 +255,7 @@ function Payment() {
                 </Row>
 
                 <div className="text-center mt-4">
-                    <Button variant="primary" type="submit">
+                    <Button variant="primary" type="submit" onClick={handlePayment}> 
                         Pay
                     </Button>
                 </div>
